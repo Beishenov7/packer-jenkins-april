@@ -14,7 +14,7 @@ spec:
     name: packer
     '''
 
-   def buildNumber = env.BUILD_NUMBER 
+def buildNumber = env.BUILD_NUMBER
 
 properties([
     parameters([
@@ -22,39 +22,38 @@ properties([
         ])
         ])
 
-if (params.region = "dev") {
+if (params.region == "dev") {
     region = "us-east-1"
 }
 
-else if (params.region = "qa") {
+else if (params.region == "qa") {
     region = "us-east-2"
 }
 
-else if (params.region = "stage") {
+else if (params.region == "stage") {
     region = "us-west-1"
 }
 
-else if (params.region = "prod") {
+else {
     region = "us-west-2"
 }
+
 
 podTemplate(cloud: 'kubernetes', label: 'packer', yaml: template) {
     node("packer") {
         container("packer") {
-
-            withCredentials([usernamePassword(credentialsId: 'AWS-credentials', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-
+            withCredentials([usernamePassword(credentialsId: 'aws-creds', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
             withEnv(["AWS_REGION=${region}"]) {
 
             stage("Checkout SCM") {
                 git branch: 'main', url: 'https://github.com/Beishenov7/packer-jenkins-april.git'
             }
-
+            
             stage("Packer build") {
                 sh "packer build -var jenkins_build_number=${buildNumber} packer.pkr.hcl"
             }
         }
     }
 }
-}
+    }
 }
