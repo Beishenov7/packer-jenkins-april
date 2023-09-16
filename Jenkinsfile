@@ -16,21 +16,16 @@ spec:
 
 def buildNumber = env.BUILD_NUMBER
 
-properties([
-    parameters([
-        choice(choices: ['dev', 'qa', 'stage', 'prod'], description: 'Pick environment', name: 'region')
-        ])
-        ])
 
-if (params.region == "dev") {
+if (env.BRANCH_NAME == "main" ) {
     region = "us-east-1"
 }
 
-else if (params.region == "qa") {
+else if (env.BRANCH_NAME == "qa") {
     region = "us-east-2"
 }
 
-else if (params.region == "stage") {
+else if (env.BRANCH_NAME == "dev") {
     region = "us-west-1"
 }
 
