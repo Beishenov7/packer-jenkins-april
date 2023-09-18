@@ -50,17 +50,17 @@ podTemplate(cloud: 'kubernetes', label: 'packer', yaml: template) {
             stage("Packer build") {
                 sh "packer build -var jenkins_build_number=${buildNumber} packer.pkr.hcl"
 
-                build job: 'hello-world',
+                build job: 'hello-world', 
                 parameters: [
-                    string(name: 'action', value: 'apply'),
+                    string(name: 'action', value: 'apply'), 
                     string(name: 'region', value: "${region}"), 
-                    string(name: 'ami_id', value: "my-ami-${buildNumber}"),
+                    string(name: 'ami_id', value: "my-ami-${buildNumber}"), 
                     string(name: 'az', value: "${region}b"), 
                     string(name: 'key_name', value: "${key_pair}")
                     ]
             }
         }
     }
-  }
- }
+}
+    }
 }
