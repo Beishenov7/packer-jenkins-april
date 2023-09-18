@@ -62,5 +62,5 @@ podTemplate(cloud: 'kubernetes', label: 'packer', yaml: template) {
         }
     }
 }
-    }
+}
 }
